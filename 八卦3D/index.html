@@ -1,0 +1,282 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body {
+            /* background-color: silver; */
+            background: -webkit-radial-gradient(navajowhite, lightyellow, #dddddd, white);
+            background: radial-gradient(navajowhite, lightyellow, #dddddd, white);
+            perspective: 500px;
+            /* 可以调整视距原点的Y轴坐标，查看不同角度不同感觉 */
+            perspective-origin: center -100px;
+            overflow: hidden;
+        }
+        .bagua {
+            /* position: fixed;
+            left: 300px;
+            top: 30px; */
+            /* 在动画过程中div.bagua的高度有时候会超出浏览器视窗，导致右侧出现垂直滚动条，浏览器视窗宽度随之减少了一些，页面内元素就出现了抖动 */
+            /* 2个解决办法，一是如上使用固定定位，但是注意定位后margin就不能用了，而且div.bagua不定在页面中心了，那么父级即body的视距原点也要改动。另一办法给body加overflow: hidden;  */
+
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 50px auto;
+            /* background-color: rgba(0, 0, 0, .3); */
+            transform-style: preserve-3d;
+            animation: spin 16s linear infinite;
+        }
+        @keyframes spin {
+            0% {
+                transform: rotate3d(.2, 1, .1, 0deg);
+            }
+            100% {
+                transform: rotate3d(.2, 1, .1, 360deg);
+            }
+        }
+        .bagua:hover {
+            animation-play-state: paused;
+        }
+        .diagram {
+            position: absolute;
+            left: 75px;
+            top: 75px;
+            width: 150px;
+            height: 150px;
+            /* tac让span水平居中 */
+            text-align: center;
+        }
+        .diagram .trigrams {
+            width: 100px;
+            margin: 20px auto 0px;
+            opacity: 0.9;
+            animation: fade 12s linear infinite alternate;
+        }
+        @keyframes fade {
+            0% {
+                opacity: .9;
+            }
+            100% {
+                opacity: .3;
+            }
+        }
+        .diagram .trigrams div {
+            width: 100%;
+            height: 20px;
+            /* margin-top会与父级塌陷，相邻上下的margin也会合并 */
+            margin-bottom: 10px;
+        }
+        .diagram .trigrams .yang {
+            background-color: black;
+            /* 附加八卦发光的过渡 */
+            transition: box-shadow 4s;
+        }
+        /* .diagram .yin {
+            background-color: gray;
+        } */
+        .diagram .trigrams .yin::before,
+        .diagram .trigrams .yin::after {
+            content: "";
+            float: left;
+            width: 40%;
+            height: 100%;
+            background-color: black;
+            /* 阴爻阴影可以延迟一点 */
+            transition: box-shadow 4s .7s;
+        }
+        .diagram .trigrams .yin::after {
+            float: right;
+        }
+        .bagua:hover .diagram .trigrams .yang,
+        .bagua:hover .diagram .trigrams .yin::before,
+        .bagua:hover .diagram .trigrams .yin::after {
+            box-shadow: 0 0 3px 4px #ffff00;
+        }
+        .diagram span {
+            font-size: 24px;
+            font-weight: 700;
+            color: black;
+            /* line-height: 30px; */
+            animation: color-change 12s linear infinite alternate;
+        }
+        @keyframes color-change {
+            0% {
+                color: black;
+            }
+            95% {
+                color: #faf805;
+            }
+            100% {
+                color: #faf805;
+            }
+        }
+        .qian {
+            /* background-color: rgba(255, 0, 0, .6); */
+            transform: translateZ(240px) rotateX(90deg);
+        }
+        .dui {
+            /* background-color: rgba(0, 255, 0, .6); */
+            transform: rotateY(45deg) translateZ(240px) rotateX(90deg);
+        }
+        .kun {
+            /* background-color: rgba(0, 0, 255, .6); */
+            transform: rotateY(90deg) translateZ(240px) rotateX(90deg);
+        }
+        .li {
+            /* background-color: rgba(255, 255, 0, .6); */
+            transform: rotateY(135deg) translateZ(240px) rotateX(90deg);
+        }
+        .xun {
+            /* background-color: rgba(255, 0, 255, .6); */
+            transform: rotateY(180deg) translateZ(240px) rotateX(90deg);
+        }
+        .zhen {
+            /* background-color: rgba(0, 255, 255, .6); */
+            transform: rotateY(225deg) translateZ(240px) rotateX(90deg);
+        }
+        .gen {
+            /* background-color: rgba(238, 119, 0, .6); */
+            transform: rotateY(270deg) translateZ(240px) rotateX(90deg);
+        }
+        .kan {
+            /* background-color: rgba(119, 0, 119, .6); */
+            transform: rotateY(315deg) translateZ(240px) rotateX(90deg);
+        }
+        /* 注意选择器的权重 尽量保持低权重 */
+        .taichi {
+            position: absolute;
+            left: 0;
+            /* top: 0; 为了配合过渡效果，初始状态先压低5px */
+            top: 5px;
+            width: 0;
+            height: 300px;
+            border-left: black solid 150px;
+            border-right: white solid 150px;
+            border-radius: 50%;
+            opacity: .9;
+            animation: rotate 6s linear infinite, fade 6s linear infinite alternate;
+            /* 附加太极双鱼发光的过渡 包括box-shadow阴影和top边偏移两个属性的过渡，直接写all */
+            transition: all 5s ease;
+        }
+        @keyframes rotate {
+            0% {
+                transform: rotateX(90deg) rotateZ(0);
+            }
+            100% {
+                transform: rotateX(90deg) rotateZ(360deg);
+            }
+        }
+        .taichi::before,
+        .taichi::after {
+            content: "";
+            display: block;
+            width: 40px;
+            height: 40px;
+            /* 150没法四等分了 */
+            margin-left: -75px;
+            border-radius: 50%;
+            background-clip: content-box;
+        }
+        .taichi::before {
+            background-color: white;
+            border: black solid 55px;
+        }
+        .taichi::after {
+            background-color: black;
+            border: white solid 55px;
+        }
+        /* 附加太极双鱼升起和阴影的过渡效果 */
+        .bagua:hover .taichi {
+            /* transform: translateZ(200px); */
+            /* transform: rotateX(90deg) translateZ(100px); */
+            /* 只写translateZ不生效，再加初始状态rotateX也只有回落的单向阶段的过渡生效，没有预想的一起一落效果 */
+            /* 过渡和动画都用到transform属性，应该是会冲突了无法生效 */
+            top: -20px;
+            /* 改用top边偏移属性做过渡，负值向上偏移，正好动画有rotateX确保翻转成平面 */
+            box-shadow: 0 0 35px 35px #ffff00;
+        }
+    </style>
+</head>
+<body>
+    <div class="bagua">
+        <!-- 乾 —— —— —— -->
+        <div class="qian diagram">
+            <div class="trigrams">
+                <div class="yang"></div>
+                <div class="yang"></div>
+                <div class="yang"></div>
+            </div>
+            <span>乾 天</span>
+        </div>
+        <!-- 兑 -- —— —— -->
+        <div class="dui diagram">
+            <div class="trigrams">
+                <div class="yin"></div>
+                <div class="yang"></div>
+                <div class="yang"></div>
+            </div>
+            <span>兑 泽</span>
+        </div>
+        <!-- 坤 -- -- -- -->
+        <div class="kun diagram">
+            <div class="trigrams">
+                <div class="yin"></div>
+                <div class="yin"></div>
+                <div class="yin"></div>
+            </div>
+            <span>坤 地</span>
+        </div>
+        <!-- 离 —— -- —— -->
+        <div class="li diagram">
+            <div class="trigrams">
+                <div class="yang"></div>
+                <div class="yin"></div>
+                <div class="yang"></div>
+            </div>
+            <span>离 火</span>
+        </div>
+        <!-- 巽 —— —— -- -->
+        <div class="xun diagram">
+            <div class="trigrams">
+                <div class="yang"></div>
+                <div class="yang"></div>
+                <div class="yin"></div>
+            </div>
+            <span>巽 风</span>
+        </div>
+        <!-- 震 -- -- —— -->
+        <div class="zhen diagram">
+            <div class="trigrams">
+                <div class="yin"></div>
+                <div class="yin"></div>
+                <div class="yang"></div>
+            </div>
+            <span>震 雷</span>
+        </div>
+        <!-- 艮 —— -- -- -->
+        <div class="gen diagram">
+            <div class="trigrams">
+                <div class="yang"></div>
+                <div class="yin"></div>
+                <div class="yin"></div>
+            </div>
+            <span>艮 山</span>
+        </div>
+        <!-- 坎 -- —— -- -->
+        <div class="kan diagram">
+            <div class="trigrams">
+                <div class="yin"></div>
+                <div class="yang"></div>
+                <div class="yin"></div>
+            </div>
+            <span>坎 水</span>
+        </div>
+        <!-- 一个盒子做中间的太极双鱼 -->
+        <div class="taichi"></div>
+    </div>
+</body>
+</html>
